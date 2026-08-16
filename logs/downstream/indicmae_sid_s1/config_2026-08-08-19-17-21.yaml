@@ -1,0 +1,29 @@
+downstream_expert:
+  datarc:
+    eval_batch_size: 1
+    file_path: /home/pranav/Projects/indicJEPA/data/kb_data_clean_wav
+    max_timestep: 128000
+    num_workers: 16
+    train_batch_size: 64
+  modelrc:
+    UtteranceLevel:
+      pooling: MeanPooling
+    projector_dim: 256
+    select: UtteranceLevel
+optimizer:
+  lr: 0.0001
+  name: TorchOptim
+  torch_optim_name: Adam
+runner:
+  eval_dataloaders:
+  - valid
+  eval_step: 5000
+  gradient_accumulate_steps: 1
+  gradient_clipping: 1
+  log_step: 1000
+  max_keep: 1000
+  save_step: 2000
+  total_steps: 50000
+scheduler:
+  name: linear_schedule_with_warmup
+  num_warmup_steps: 5000

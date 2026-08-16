@@ -1,0 +1,24 @@
+2026-07-02 17:50:50,422 INFO    MainThread:225559 [wandb_setup.py:_flush():81] Current SDK version is 0.28.0
+2026-07-02 17:50:50,422 INFO    MainThread:225559 [wandb_setup.py:_flush():81] Configure stats pid to 225559
+2026-07-02 17:50:50,423 INFO    MainThread:225559 [wandb_setup.py:_flush():81] Loading settings from environment variables
+2026-07-02 17:50:50,423 INFO    MainThread:225559 [wandb_init.py:setup_run_log_directory():725] Logging user logs to runs/indicjepa_s42/wandb/run-20260702_175050-50gtaurr/logs/debug.log
+2026-07-02 17:50:50,423 INFO    MainThread:225559 [wandb_init.py:setup_run_log_directory():726] Logging internal logs to runs/indicjepa_s42/wandb/run-20260702_175050-50gtaurr/logs/debug-internal.log
+2026-07-02 17:50:50,423 INFO    MainThread:225559 [wandb_init.py:init():768] calling init triggers
+2026-07-02 17:50:50,423 INFO    MainThread:225559 [wandb_init.py:init():773] wandb.init called with sweep_config: {}
+config: {'data': {'dataset_path': './cache/indicvoices', 'sample_rate': 16000, 'clip_duration': 5.0, 'n_mels': 128, 'n_time_bins': 256, 'frame_to_hop_ratio': 2.5, 'batch_size': 64, 'num_workers': 4}, 'model': {'patch_size': 16, 'embed_dim': 384, 'depth': 12, 'num_heads': 6, 'mlp_ratio': 4.0, 'predictor_embed_dim': 192, 'predictor_depth': 6, 'predictor_num_heads': 6}, 'masking': {'strategy': 'random', 'mask_ratio_min': 0.4, 'mask_ratio_max': 0.6}, 'optimizer': {'type': 'adamw', 'lr': 0.0003, 'weight_decay': 0.05, 'betas': [0.9, 0.95], 'gradient_clip': 1.0}, 'schedule': {'warmup_steps': 1000, 'warmup_start_lr': 1e-06, 'total_steps': 50000, 'decay': 'cosine', 'ema_tau_start': 0.996, 'ema_tau_end': 1.0}, 'training': {'max_steps': 50000, 'precision': 'bf16', 'checkpoint_every': 5000, 'log_every': 100, 'seed': 42}, 'paths': {'data_dir': './data', 'log_dir': './logs', 'checkpoint_dir': './checkpoints'}, 'logging': {'wandb_project': 'sync-JEPA', 'wandb_entity': None, 'run_name': None}, '_wandb': {}}
+2026-07-02 17:50:50,423 INFO    MainThread:225559 [wandb_init.py:init():816] starting backend
+2026-07-02 17:50:50,423 INFO    MainThread:225559 [wandb_init.py:init():831] sending inform_init request
+2026-07-02 17:50:51,001 INFO    MainThread:225559 [wandb_init.py:init():836] backend started and connected
+2026-07-02 17:50:51,002 INFO    MainThread:225559 [wandb_init.py:init():906] updated telemetry
+2026-07-02 17:50:51,007 INFO    MainThread:225559 [wandb_init.py:init():929] communicating run to backend with 90.0 second timeout
+2026-07-02 17:50:51,586 INFO    MainThread:225559 [wandb_init.py:init():974] starting run threads in backend
+2026-07-02 17:50:51,735 INFO    MainThread:225559 [wandb_run.py:_console_start():2523] atexit reg
+2026-07-02 17:50:51,735 INFO    MainThread:225559 [wandb_run.py:_redirect():2373] redirect: wrap_raw
+2026-07-02 17:50:51,735 INFO    MainThread:225559 [wandb_run.py:_redirect():2442] Wrapping output streams.
+2026-07-02 17:50:51,735 INFO    MainThread:225559 [wandb_run.py:_redirect():2465] Redirects installed.
+2026-07-02 17:50:51,738 INFO    MainThread:225559 [wandb_init.py:init():1012] run started, returning control to user process
+2026-07-02 19:14:31,293 INFO    MainThread:225559 [wandb_run.py:_finish():2285] finishing run pranavu8406-mandelsite-pages-dev/sync-JEPA/50gtaurr
+2026-07-02 19:14:31,293 INFO    MainThread:225559 [wandb_run.py:_atexit_cleanup():2490] got exitcode: 0
+2026-07-02 19:14:31,293 INFO    MainThread:225559 [wandb_run.py:_restore():2472] restore
+2026-07-02 19:14:31,294 INFO    MainThread:225559 [wandb_run.py:_restore():2478] restore done
+2026-07-02 19:14:34,438 INFO    MainThread:225559 [wandb_run.py:_footer_sync_info():3895] logging synced files

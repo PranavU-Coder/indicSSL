@@ -1,0 +1,51 @@
+data:
+  dataset_path: ./cache/indicvoices
+  sample_rate: 16000
+  clip_duration: 5.0
+  n_mels: 128
+  n_time_bins: 256
+  frame_to_hop_ratio: 2.5
+  batch_size: 64
+  num_workers: 4
+model:
+  patch_size: 16
+  embed_dim: 384
+  depth: 12
+  num_heads: 6
+  mlp_ratio: 4.0
+  predictor_embed_dim: 192
+  predictor_depth: 6
+  predictor_num_heads: 6
+masking:
+  strategy: random
+  mask_ratio_min: 0.4
+  mask_ratio_max: 0.6
+optimizer:
+  type: adamw
+  lr: 0.0003
+  weight_decay: 0.05
+  betas:
+  - 0.9
+  - 0.95
+  gradient_clip: 1.0
+schedule:
+  warmup_steps: 1000
+  warmup_start_lr: 1.0e-06
+  total_steps: 50000
+  decay: cosine
+  ema_tau_start: 0.996
+  ema_tau_end: 1.0
+training:
+  max_steps: 50000
+  precision: bf16
+  checkpoint_every: 5000
+  log_every: 100
+  seed: 2
+paths:
+  data_dir: ./data
+  log_dir: ./logs
+  checkpoint_dir: ./checkpoints
+logging:
+  wandb_project: sync-JEPA
+  wandb_entity: null
+  run_name: null

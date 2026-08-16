@@ -1,12 +1,11 @@
-# data [right now the idea is to get the base fsd50k than the full 2 mill clips as it is unrealistic to run on my system]
-data: 
-  dataset_path: ./data/fsd50k
-  sample_rate: 32000
-  clip_duration: 10.0
-  n_mels: 128
-  n_time_bins: 256
-  frame_to_hop_ratio: 2.5
-  batch_size: 64      
+data:
+  dataset_path: ./cache/indicvoices   
+  sample_rate: 16000       
+  clip_duration: 5.0        
+  n_mels: 128               
+  n_time_bins: 256          
+  frame_to_hop_ratio: 2.5   
+  batch_size: 64           
   num_workers: 4
 
 # models
@@ -25,18 +24,7 @@ masking:
   strategy: random        
   mask_ratio_min: 0.40
   mask_ratio_max: 0.60
-
-# sigreg [not to be used in initial testing purposes] 
-#sigreg:
-#  num_projections: 64      # M
-#  test: epps_pulley        # univariate gaussianity test
-#  weight: 1.0              # weight when combined with prediction loss
-
-# loss
-#loss:
-  prediction_weight: 1.0   # l2 distance between predictor output and target
-#  sigreg_weight: 1.0       # sigreg term
-
+  
 # optimizer
 optimizer:
   type: adamw
@@ -49,12 +37,14 @@ optimizer:
 schedule:
   warmup_steps: 1000
   warmup_start_lr: 1.0e-6
-  total_steps: 100000      
+  total_steps: 50000      
   decay: cosine
+  ema_tau_start: 0.996
+  ema_tau_end: 1.0
 
 # training
 training:
-  max_steps: 100000
+  max_steps: 50000
   precision: bf16         
   checkpoint_every: 5000
   log_every: 100
@@ -68,6 +58,6 @@ paths:
 
 # logs
 logging:
-  wandb_project: sync-JEPA
+  wandb_project: indicJEPA
   wandb_entity: null       
-  run_name: null          
+  run_name: null

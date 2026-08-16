@@ -21,7 +21,19 @@ htmlcov/
 cache/
 runs/
 
-# dataset
-data/fsd50k
-data/esc50
-.nox/
+# dataset & other stuff which destroys git LFS
+testkn_audio.tar
+testunk_audio.tar
+train_audio.tar
+valid_audio.tar
+data/kb_data_clean_m4a/
+data/kb_data_clean_wav/
+m2d/data/
+m2d/.venv/
+m2d/m2d_vit_small-*/
+IndicSUPERB/.venv-superb/
+IndicSUPERB/result/
+IndicSUPERB/s3prl.egg-info/
+
+# checkpoints
+checkpoints/

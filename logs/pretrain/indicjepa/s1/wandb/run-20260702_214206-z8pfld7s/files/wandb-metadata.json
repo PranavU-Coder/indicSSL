@@ -1,0 +1,50 @@
+{
+  "os": "Linux-7.0.12-1-cachyos-x86_64-with-glibc2.43",
+  "python": "CPython 3.13.12",
+  "startedAt": "2026-07-02T16:12:06.148840Z",
+  "args": [
+    "--config",
+    "configs/default.yaml",
+    "--data_dir",
+    "./cache/indicvoices",
+    "--output_dir",
+    "./runs/indicjepa_s1",
+    "--override",
+    "training.seed=1"
+  ],
+  "program": "/home/pranav/Projects/indicJEPA/src/indicJEPA/train.py",
+  "codePath": "src/indicJEPA/train.py",
+  "codePathLocal": "src/indicJEPA/train.py",
+  "git": {
+    "remote": "git@github.com:PranavU-Coder/sync-JEPA.git",
+    "commit": "625a19f0381bc151b8c0edf57483e6147c9dd0d2"
+  },
+  "email": "pranavu8406@gmail.com",
+  "root": "runs/indicjepa_s1",
+  "host": "cachyos",
+  "executable": "/home/pranav/Projects/sync-JEPA/.venv/bin/python",
+  "cpu_count": 8,
+  "cpu_count_logical": 16,
+  "gpu": "NVIDIA GeForce RTX 4060 Laptop GPU",
+  "gpu_count": 1,
+  "disk": {
+    "/": {
+      "total": "983040749568",
+      "used": "515235618816"
+    }
+  },
+  "memory": {
+    "total": "24857702400"
+  },
+  "gpu_nvidia": [
+    {
+      "name": "NVIDIA GeForce RTX 4060 Laptop GPU",
+      "memoryTotal": "8585740288",
+      "cudaCores": 3072,
+      "architecture": "Ada",
+      "uuid": "GPU-5bf66174-d2ce-a986-77bb-412086cc66f2"
+    }
+  ],
+  "cudaVersion": "13.3",
+  "writerId": "6d8detbf20dc4c6vh8bxs9skmw69prnf"
+}
