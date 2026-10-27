@@ -14,9 +14,8 @@ from datasets import Audio, load_dataset
 from tqdm import tqdm
 
 from configs import load_config
-from src.indicJEPA.prep import compute_mel_params   # reuse the exact same (n_fft, hop) solver
+from src.indicJEPA.prep import compute_mel_params
 
-# the 12 IndicSUPERB (Kathbath) languages specified
 IV_LANGS_12 = [
     "hindi", "bengali", "marathi", "tamil", "telugu", "kannada",
     "malayalam", "gujarati", "punjabi", "odia", "urdu", "sanskrit",
@@ -79,14 +78,14 @@ def main():
                 break
             wav_np, file_sr = _decode(ex[audio_col])
             wav = torch.from_numpy(np.ascontiguousarray(wav_np))
-            if wav.ndim > 1:                                 # force mono
+            if wav.ndim > 1:
                 wav = wav.mean(dim=-1)
             got_s += wav.numel() / file_sr
-            wav = wav.unsqueeze(0).to(device)                # (1, T)
+            wav = wav.unsqueeze(0).to(device)
             if file_sr != sr:
                 wav = torchaudio.functional.resample(wav, file_sr, sr)
             mel = mel_xform(wav)
-            log_mel = torch.log(mel + 1e-6).squeeze(0).half().cpu()   # (n_mels, T)
+            log_mel = torch.log(mel + 1e-6).squeeze(0).half().cpu()
             torch.save(log_mel, dst / f"{lang}_{idx:07d}.pt")
             idx += 1
             pbar.set_postfix(hours=f"{got_s / 3600:.2f}")

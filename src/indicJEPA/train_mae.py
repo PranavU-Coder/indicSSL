@@ -29,8 +29,11 @@ def cosine_lr(step, base_lr, warmup, total, start_lr, min_lr=0.0):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--config", required=True)
+    ap.add_argument("--seed", type=int, default=None, help="override training.seed")
     args = ap.parse_args()
     cfg = yaml.safe_load(open(args.config))
+    if args.seed is not None:
+        cfg["training"]["seed"] = args.seed
 
     d, sch, opt_c, tr = cfg["data"], cfg["schedule"], cfg["optimizer"], cfg["training"]
     mask = cfg["masking"]
@@ -87,9 +90,9 @@ def main():
             opt.zero_grad(set_to_none=True)
             if use_bf16:
                 with torch.autocast(device_type="cuda", dtype=torch.bfloat16):
-                    loss = model(imgs, mr_min, mr_max, norm_pix_loss=False)
+                    loss = model(imgs, mr_min, mr_max, norm_pix_loss=True)
             else:
-                loss = model(imgs, mr_min, mr_max, norm_pix_loss=False)
+                loss = model(imgs, mr_min, mr_max, norm_pix_loss=True)
 
             loss.backward()
             if grad_clip:

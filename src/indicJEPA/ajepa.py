@@ -29,7 +29,7 @@ class MelDataset(Dataset):
         else:
             mel = F.pad(mel, (0, self.n_frames - T), value=float(mel.min()))
         mel = (mel - mel.mean()) / (mel.std() + 1e-6)
-        return mel.unsqueeze(0)  # (1, n_mels, n_frames)
+        return mel.unsqueeze(0)
 
 
 def get_2d_sincos_pos_embed(embed_dim, grid_h, grid_w):
@@ -111,13 +111,13 @@ class ViTEncoder(nn.Module):
         self.apply(_init_weights)
 
     def forward(self, x, keep_indices=None):
-        x = self.patch_embed(x)  # (B, D, gh, gw)
-        x = x.flatten(2).transpose(1, 2)  # (B, N, D)
-        x = x + self.pos_embed  # add full pos before gather
+        x = self.patch_embed(x)
+        x = x.flatten(2).transpose(1, 2)
+        x = x + self.pos_embed
         if keep_indices is not None:
             D = x.size(-1)
             idx = keep_indices.unsqueeze(-1).expand(-1, -1, D)
-            x = torch.gather(x, 1, idx)  # (B, K, D)
+            x = torch.gather(x, 1, idx)
         for blk in self.blocks:
             x = blk(x)
         return self.norm(x)
@@ -129,18 +129,18 @@ class ViTEncoder(nn.Module):
         collects every block's output instead of returning only norm(last). Used to build
         data2vec / WavJEPA-style multi-layer targets (average of the top-K teacher layers).
         """
-        x = self.patch_embed(x)  # (B, D, gh, gw)
-        x = x.flatten(2).transpose(1, 2)  # (B, N, D)
-        x = x + self.pos_embed  # add full pos before gather
+        x = self.patch_embed(x)
+        x = x.flatten(2).transpose(1, 2)
+        x = x + self.pos_embed
         if keep_indices is not None:
             D = x.size(-1)
             idx = keep_indices.unsqueeze(-1).expand(-1, -1, D)
-            x = torch.gather(x, 1, idx)  # (B, K, D)
+            x = torch.gather(x, 1, idx)
         feats = []
         for blk in self.blocks:
             x = blk(x)
             feats.append(x)
-        return feats  # NOTE: does not apply self.norm
+        return feats
 
 
 class Predictor(nn.Module):
@@ -292,11 +292,11 @@ class AudioJEPA(nn.Module):
         )
 
     def _multilayer_target(self, x):
-        feats = self.target_encoder.forward_intermediate(x)  # list[(B,N,D)], pre-final-norm
+        feats = self.target_encoder.forward_intermediate(x)
         K = min(self.target_layers, len(feats))
-        feats = feats[-K:]                                   # top-K blocks (includes mid-stack)
+        feats = feats[-K:]
         feats = [F.instance_norm(f.transpose(1, 2)).transpose(1, 2) for f in feats]
-        tgt = torch.stack(feats, dim=0).mean(dim=0)          # (B, N, D)
+        tgt = torch.stack(feats, dim=0).mean(dim=0)
         tgt = F.layer_norm(tgt, (tgt.size(-1),))
         return tgt
 
@@ -314,7 +314,7 @@ class AudioJEPA(nn.Module):
             if self.target_layers <= 1:
                 tgt_full = self.target_encoder(x)            
             else:
-                tgt_full = self._multilayer_target(x)        # top-K averaged target
+                tgt_full = self._multilayer_target(x)
             D = tgt_full.size(-1)
             tgt = torch.gather(tgt_full, 1, mask_idx.unsqueeze(-1).expand(-1, -1, D))
             if self.target_layers > 1:

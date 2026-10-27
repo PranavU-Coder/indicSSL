@@ -10,7 +10,7 @@ def _get_experts():
                 _module_name = f".{_name}.expert"
                 _module = importlib.import_module(_module_name, package=__package__)
 
-            except ModuleNotFoundError as e:
+            except Exception as e:
                 if "pase" in _module_name:
                     # pase is not installed by default. See upstream/pase/README.md
                     continue

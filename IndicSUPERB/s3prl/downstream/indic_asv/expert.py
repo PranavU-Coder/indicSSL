@@ -238,7 +238,7 @@ class DownstreamExpert(nn.Module):
         
         if self.modelrc['module'] == "XVector":
             # TDNN layers in XVector will decrease the total sequence length by fixed 14
-            attention_mask = [torch.ones((feature.shape[0] - 14)) for feature in features]
+            attention_mask = [torch.ones((max(feature.shape[0] - 14, 1))) for feature in features]
         else:
             attention_mask = [torch.ones((feature.shape[0])) for feature in features]
 
@@ -292,14 +292,20 @@ class DownstreamExpert(nn.Module):
         save_names = []
 
         if mode == 'train':
-            loss = torch.FloatTensor(records['loss']).mean().item()
-            logger.add_scalar(f'indic_asv/{mode}-loss', loss, global_step=global_step)
+            import numpy as _np
+            loss = float(_np.mean(_np.asarray(records['loss'], dtype=float).ravel())) if len(records['loss']) else 0.0
+            print('DBG loss=', repr(loss), type(loss), 'gs=', repr(global_step), type(global_step))
+            try:
+                logger.add_scalar(f'indic_asv/{mode}-loss', loss, global_step=global_step)
+            except Exception: pass
             print(f'indic_asv/{mode}-loss: {loss}')
 
         else:
         # elif mode in ['valid', 'test_known','test_unknown']:
             eer, *others = self.eval_metric(np.array(records['labels']), np.array(records['scores']))
-            logger.add_scalar(f'indic_asv/{mode}-EER', eer, global_step=global_step)
+            try:
+                logger.add_scalar(f'indic_asv/{mode}-EER', float(np.mean(eer)), global_step=global_step)
+            except Exception: pass
             print(f'indic_ascv/{mode}-EER: {eer}')
 
             if eer < self.best_score and mode == 'valid':

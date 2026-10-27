@@ -212,10 +212,10 @@ def main():
                 avg = log_loss / log_n
                 with torch.no_grad():
                     # LayerNorm forces unit std within a token, so the only meaningful collapse signal lives across samples.
-                    pooled = ctx_emb.detach().float().mean(dim=1)  # (B, D)
+                    pooled = ctx_emb.detach().float().mean(dim=1)
                     sample_std = pooled.std(dim=0).mean().item()
                     pooled_n = torch.nn.functional.normalize(pooled, dim=-1)
-                    cos = pooled_n @ pooled_n.T  # (B, B)
+                    cos = pooled_n @ pooled_n.T
                     B = pooled.size(0)
                     avg_cos = (cos.sum() - cos.diagonal().sum()).item() / (B * (B - 1))
                 sps = log_n / (time.time() - t0 + 1e-9)

@@ -32,21 +32,20 @@ class MAEDecoder(nn.Module):
         returns:      (B, M, patch_pixels)  predicted pixels at masked positions
         """
         B = x.size(0)
-        x = self.decoder_embed(x)                                        # (B, K, Dd)
+        x = self.decoder_embed(x)
         Dd = x.size(-1)
 
-        full = self.mask_token.to(x.dtype).expand(B, self.n_patches, Dd).clone()     # (B, N, Dd)
+        full = self.mask_token.to(x.dtype).expand(B, self.n_patches, Dd).clone()
         full.scatter_(1, keep_indices.unsqueeze(-1).expand(-1, -1, Dd), x)
 
         full = full + self.pos_embed                                    
         for blk in self.blocks:
             full = blk(full)
         full = self.norm(full)
-        pred = self.pred(full)                                           # (B, N, patch_pixels)
+        pred = self.pred(full)
 
-        # return predictions at masked positions only
         idx = mask_indices.unsqueeze(-1).expand(-1, -1, pred.size(-1))
-        return torch.gather(pred, 1, idx)                                # (B, M, patch_pixels)
+        return torch.gather(pred, 1, idx)
 
 
 class IndicMAE(nn.Module):
@@ -59,7 +58,7 @@ class IndicMAE(nn.Module):
         self.grid_h = self.encoder.grid_h
         self.grid_w = self.encoder.grid_w
         self.n_patches = self.encoder.n_patches
-        patch_pixels = patch_size * patch_size                           # 256
+        patch_pixels = patch_size * patch_size
         self.decoder = MAEDecoder(embed_dim, decoder_embed_dim, decoder_depth,
                                   decoder_num_heads, self.grid_h, self.grid_w,
                                   patch_pixels, mlp_ratio)               
@@ -71,7 +70,7 @@ class IndicMAE(nn.Module):
         gh, gw = H // p, W // p
         x = imgs.reshape(B, 1, gh, p, gw, p)
         x = x.permute(0, 2, 4, 3, 5, 1).reshape(B, gh * gw, p * p)
-        return x                                                         # (B, N, p*p)
+        return x
 
     @staticmethod
     def random_masking(B, n_patches, mask_ratio, device):
@@ -90,13 +89,13 @@ class IndicMAE(nn.Module):
 
         keep_idx, mask_idx = self.random_masking(B, self.n_patches, mask_ratio, device)
 
-        latent = self.encoder(imgs, keep_indices=keep_idx)               # (B, K, D)
-        pred = self.decoder(latent, keep_idx, mask_idx)                  # (B, M, p*p)
+        latent = self.encoder(imgs, keep_indices=keep_idx)
+        pred = self.decoder(latent, keep_idx, mask_idx)
 
-        target_all = self.patchify(imgs)                                 # (B, N, p*p)
+        target_all = self.patchify(imgs)
         target = torch.gather(
             target_all, 1, mask_idx.unsqueeze(-1).expand(-1, -1, target_all.size(-1))
-        )                                                                # (B, M, p*p)
+        )
 
         if norm_pix_loss:
             mean = target.mean(dim=-1, keepdim=True)
@@ -118,8 +117,8 @@ def build_from_config(cfg):
         embed_dim=int(m["embed_dim"]),
         depth=int(m["depth"]),
         num_heads=int(m["num_heads"]),
-        decoder_embed_dim=int(m["predictor_embed_dim"]),      # 192 (config reused JEPA field names)
-        decoder_depth=int(m["predictor_depth"]),              # 6
-        decoder_num_heads=int(m["predictor_num_heads"]),      # 6
+        decoder_embed_dim=int(m["predictor_embed_dim"]),  # config reused JEPA field names
+        decoder_depth=int(m["predictor_depth"]),
+        decoder_num_heads=int(m["predictor_num_heads"]),
         mlp_ratio=float(m.get("mlp_ratio", 4.0)),
     )

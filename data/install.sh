@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 # Usage:
-#   bash download_kathbath.sh                         # clean split -> ./data
-#   bash download_kathbath.sh --dest ~/Projects/indicJEPA/data, you might wanna change accordingly
-#   bash download_kathbath.sh --no-train              # skip the 85 GB train tar (eval-only)
-#   bash download_kathbath.sh --split noisy           # noisy test sets + transcripts
-#   bash download_kathbath.sh --split both
-#   bash download_kathbath.sh --convert --superb-dir ~/Projects/indicJEPA/IndicSUPERB
+#   bash install.sh                         # clean split -> ./data
+#   bash install.sh --dest ~/Projects/indicJEPA/data, you might wanna change accordingly
+#   bash install.sh --no-train              # skip the 85 GB train tar (eval-only)
+#   bash install.sh --split noisy           # noisy test sets + transcripts
+#   bash install.sh --split both
+#   bash install.sh --convert --superb-dir ~/Projects/indicJEPA/IndicSUPERB
 #                                                     # also m4a -> 16 kHz wav
 #
 # resumable (wget -c). re-running skips finished downloads && finished extracts.

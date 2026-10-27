@@ -12,11 +12,9 @@ import numpy as np
 from torch import nn
 from pathlib import Path
 from sox import Transformer
-from torchaudio import load
 from librosa.util import find_files
 from joblib.parallel import Parallel, delayed
 from torch.utils.data import DataLoader, Dataset
-from torchaudio.sox_effects import apply_effects_file
 
 
 EFFECTS = [
@@ -25,6 +23,20 @@ EFFECTS = [
 ["gain", "-3.0"],
 ["silence", "1", "0.1", "0.1%", "-1", "0.1", "0.1%"],
 ]
+
+def _load_wav(path):
+    import torch, torchaudio
+    import soundfile as sf, torch
+    _a, sr = sf.read(str(path), dtype='float32')
+    wav = torch.from_numpy(_a)
+    wav = wav.T if wav.ndim > 1 else wav.unsqueeze(0)   # -> (channels, samples)
+    wav = wav * (10 ** (-3.0 / 20))                      # SoX gain -3 dB
+    mono = wav.mean(0)
+    keep = mono.abs() > 1e-3                              # approx SoX silence trim
+    if keep.any():
+        i, j = keep.nonzero()[0].item(), keep.nonzero()[-1].item()
+        wav = wav[:, i:j+1]
+    return wav, sr
 
 # Voxceleb 2 Speaker verification
 class SpeakerVerifi_train(Dataset):
@@ -43,7 +55,7 @@ class SpeakerVerifi_train(Dataset):
 
             if not cache_path.is_file():
                 def trimmed_length(path):
-                    wav_sample, _ = apply_effects_file(path, EFFECTS)
+                    wav_sample, _ = _load_wav(path)
                     wav_sample = wav_sample.squeeze(0)
                     length = wav_sample.shape[0]
                     return length
@@ -71,7 +83,7 @@ class SpeakerVerifi_train(Dataset):
     
     def __getitem__(self, idx):
         path = self.dataset[idx]
-        wav, _ = apply_effects_file(str(path), EFFECTS)
+        wav, _ = _load_wav(path)
         wav = wav.squeeze(0)
         length = wav.shape[0]
         
@@ -125,8 +137,8 @@ class SpeakerVerifi_test(Dataset):
         x1_name = path2name(x1_path)
         x2_name = path2name(x2_path)
 
-        wav1, _ = apply_effects_file(x1_path, EFFECTS)
-        wav2, _ = apply_effects_file(x2_path, EFFECTS)
+        wav1, _ = _load_wav(x1_path)
+        wav2, _ = _load_wav(x2_path)
 
         wav1 = wav1.squeeze(0)
         wav2 = wav2.squeeze(0)

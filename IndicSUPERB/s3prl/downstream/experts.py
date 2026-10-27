@@ -10,7 +10,7 @@ def _get_experts():
                 _module_name = f".{_name}.expert"
                 _module = importlib.import_module(_module_name, package=__package__)
 
-            except ModuleNotFoundError as e:
+            except Exception as e:
                 full_package = f"{__package__}{_module_name}"
                 print(f'[{__name__}] Warning: can not import {full_package}: {str(e)}. Pass.')
                 continue
